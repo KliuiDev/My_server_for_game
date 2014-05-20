@@ -1,1 +1,1 @@
-My server for some net program.
+My server can be used for some web programs and games. Such as this popular game 2048.
