@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+
+    <security:http auto-config="false" use-expressions="true" access-denied-page="/denied"
+                   entry-point-ref="authenticationEntryPoint">
+
+        <security:custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/>
+
+        <security:logout
+                invalidate-session="true"
+                logout-success-url="/game.htm"
+                logout-url="/logout"/>
+
+        <!-- Static -->
+        <security:intercept-url pattern="/css/**" access="permitAll"/>
+        <security:intercept-url pattern="/js/**" access="permitAll"/>
+        <security:intercept-url pattern="/img/**" access="permitAll"/>
+        <security:intercept-url pattern="/external/**" access="permitAll"/>
+        <!-- Dinamic -->
+        <security:intercept-url pattern="/login.htm" access="isAnonymous()"/>
+        <security:intercept-url pattern="/game.htm" access="permitAll"/>
+        <security:intercept-url pattern="/game/**" access="permitAll"/>
+        <security:intercept-url pattern="/contact.htm" access="permitAll"/>
+        <security:intercept-url pattern="/registration" access="permitAll"/>
+        <security:intercept-url pattern="/list" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/list/**" access="hasRole('ROLE_ADMIN')"/>
+
+        <security:intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/**" access="permitAll"/>
+
+    </security:http>
+
+    <!--<security:global-method-security pre-post-annotations="enabled"/>-->
+
+    <!-- Custom filter for username and password. The real customization is done in the customAthenticationManager -->
+    <bean id="authenticationFilter"
+          class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter"
+          p:authenticationManager-ref="customAuthenticationManager"
+          p:authenticationFailureHandler-ref="customAuthenticationFailureHandler"
+          p:authenticationSuccessHandler-ref="customAuthenticationSuccessHandler"/>
+
+    <!-- Custom authentication manager. In order to authenticate, username and password must not be the same -->
+    <bean id="customAuthenticationManager" class="com.springapp.mvc.controller.CustomAuthenticationManager"/>
+
+    <!-- We just actually need to set the default failure url here -->
+    <bean id="customAuthenticationFailureHandler"
+          class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"
+          p:defaultFailureUrl="/login.htm?error=true"/>
+
+    <!-- We just actually need to set the default target url here -->
+    <bean id="customAuthenticationSuccessHandler"
+          class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler"
+          p:defaultTargetUrl="/game.htm"/>
+
+    <!-- The AuthenticationEntryPoint is responsible for redirecting the user to a particular page, like a login page,
+    whenever the server sends back a response requiring authentication -->
+    <!-- See Spring-Security Reference 5.4.1 for more info -->
+    <bean id="authenticationEntryPoint"
+          class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint"
+          p:loginFormUrl="/login.htm"/>
+
+    <security:authentication-manager/>
+
+</beans>

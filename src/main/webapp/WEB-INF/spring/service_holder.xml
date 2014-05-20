@@ -1,0 +1,20 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+    <bean name="ServiceHolder" class="com.springapp.mvc.service.ServiceHolder" scope="singleton">
+
+        <constructor-arg index="0">
+            <bean class="com.springapp.mvc.service.impl.UserServiceImpl">
+                <constructor-arg index="0">
+                    <bean class="com.springapp.mvc.dao.impl.UserDaoImpl">
+                        <property name="sessionFactory" ref="sessionFactory"/>
+                    </bean>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+
+    </bean>
+
+</beans>

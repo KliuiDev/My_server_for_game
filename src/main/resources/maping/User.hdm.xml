@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="com.springapp.mvc.model.User" table="game2048">
+        <id name="id" type="java.lang.Long">
+            <column name="id"/>
+            <generator class="identity"/>
+        </id>
+
+        <property name="name" type="java.lang.String">
+            <column name="name"/>
+        </property>
+
+        <property name="secondName" type="java.lang.String">
+            <column name="second_name"/>
+        </property>
+
+        <property name="password" type="java.lang.String">
+            <column name="password"/>
+        </property>
+
+        <property name="email" type="java.lang.String">
+            <column name="email"/>
+        </property>
+
+        <property name="roles" type="java.lang.String">
+            <column name="roles"/>
+        </property>
+
+        <property name="score" type="java.lang.Integer">
+            <column name="score"/>
+        </property>
+
+    </class>
+
+</hibernate-mapping>
